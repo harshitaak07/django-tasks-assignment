@@ -1,7 +1,7 @@
 from django.db import models
-from enum import Enum
+from enum import Enum, StrEnum
 
-class TaskStatus(Enum):
+class TaskStatus(StrEnum):
     PENDING = 'Pending'
     COMPLETED = 'Completed'
 
@@ -21,7 +21,7 @@ class Task(BaseModel):
     title = models.CharField(max_length=255, verbose_name="Task Title")
     description = models.TextField(blank=True, verbose_name="Task Description")
     status = models.CharField(
-        max_length=10,
+        max_length=20,
         choices=TaskStatus.choices(),  # Use the choices defined in Enum
         default=TaskStatus.PENDING,
         verbose_name="Task Status"
@@ -33,7 +33,6 @@ class Task(BaseModel):
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
         ordering = ['-created_at']
-        db_table = "task"
 
     def __str__(self):
         return f"{self.title} ({self.status})"
