@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import dj_database_url
+from environs import Env
 import os
-from dotenv import load_dotenv
 
-# Load environment variables from the .env file
-load_dotenv()
+# Initialize the Env object to read environment variables
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')  # Replace with a secure key
+SECRET_KEY = env.str('SECRET_KEY')  # Replace with a secure key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = env.bool('DEBUG', default=False)  # Convert to boolean
 
 ALLOWED_HOSTS = ["*"]  # Set this based on your deployment needs
 
@@ -93,9 +94,10 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database configuration
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL")
+        default=env.str("DATABASE_URL")
     )
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
