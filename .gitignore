@@ -1,5 +1,41 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+
+# Django-specific files
 db.sqlite3
-.venv
-__pycache__
+*.log
+*.pot
+*.py[cod]
+*.env
+
+# macOS files
+.DS_Store
+
+# Python virtual environment
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+
+# Coverage reports
+.coverage
+*.cover
+
+# IDEs (Visual Studio Code, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Django migrations
+*/migrations/
+
+# Django static files
 staticfiles/
-data/
+
+# Media files
+media/
+
+# Temporary files
+*.bak
+*.swp
