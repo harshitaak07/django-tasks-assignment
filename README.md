@@ -183,7 +183,16 @@ python manage.py test
 
 ## Additional Features
 
+- Fuzzy Search via pg_trgm extension
 - Rate limiting implemented for API endpoints
 - Pagination for list views
 - Proper Error Handling, Logging and status codes
 - Solid Principles of Clean Architecture
+
+## Running the Application with Docker
+
+- Build the Docker image: docker build.
+- Build and start the containers: docker-compose up --build
+- Apply database migrations: docker-compose exec web python manage.py migrate
+- Access the application: http://localhost:8000/
+- Stop the containers: docker-compose down
