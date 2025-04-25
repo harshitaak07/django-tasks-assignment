@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.postgres",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -96,6 +97,12 @@ DATABASES = {
     "default": dj_database_url.config(
         default=env.str("DATABASE_URL")
     )
+}
+
+POSTGRESQL_EXTENSIONS = ['pg_trgm']
+
+DATABASES['default']['OPTIONS'] = {
+    'options': '-c search_path=public',
 }
 
 # Password validation

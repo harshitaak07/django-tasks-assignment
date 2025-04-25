@@ -18,11 +18,11 @@ class BaseModel(models.Model):
         abstract = True
         verbose_name = "Base Fields"
 class Task(BaseModel):
-    title = models.CharField(max_length=255, verbose_name="Task Title")
+    title = models.CharField(max_length=255, verbose_name="Task Title", null=False)
     description = models.TextField(blank=True, verbose_name="Task Description")
     status = models.CharField(
         max_length=20,
-        choices=TaskStatus.choices(),  # Use the choices defined in Enum
+        choices=TaskStatus.choices(), 
         default=TaskStatus.PENDING,
         verbose_name="Task Status"
     )

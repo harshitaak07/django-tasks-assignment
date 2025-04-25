@@ -27,7 +27,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                 search_date_obj = datetime.strptime(search_date, "%Y-%m-%d")
                 queryset = queryset.annotate(created_date=TruncDate('created_at')).filter(created_date=search_date_obj.date())
             except ValueError:
-                return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+                queryset = Task.objects.none()
 
 
         search_title = self.request.query_params.get('search', None)
