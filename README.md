@@ -45,6 +45,7 @@ pip install -r requirements.txt
 SECRET_KEY=<SECRET_KEY>
 DEBUG=True
 DATABASE_URL=<DATABASE_URL>
+REDIS_URL=<REDIS_URL> (Rate limit uses local memory cache; tests use Redis.)
 ```
 
 5. Run migrations
@@ -77,15 +78,9 @@ python manage.py runserver
 
 ### Creating a Task
 
-```bash
-curl -X POST http://localhost:8000/tasks/ \
-  -H "Content-Type: application/json" \
-  -d '{"title": "Sample Task", "description": "This is a sample task"}'
-```
+**POST** http://localhost:8000/tasks/
 
-Response:
-
-```json
+```json body
 {
   "id": 1,
   "title": "Sample Task",
@@ -96,35 +91,38 @@ Response:
 
 ### Listing All Tasks
 
-```bash
-curl -X GET http://localhost:8000/tasks/
-```
+**GET** http:/url/tasks/
 
 ### Searching Tasks by Title
 
-```bash
-curl -X GET http://localhost:8000/tasks/?search=Sample
-```
+**GET** http:/url/tasks/?search=Sample
 
 ### Sorting Tasks by Date
 
-```bash
-curl -X GET http://localhost:8000/tasks/?sort_by_date=true
-```
+**GET** http:/url/tasks/?sort_by_date=true
+
+### Filtering Tasks by Date Range
+
+**GET** http:/url/tasks/?search_date=YYYY-MM-DD
 
 ### Updating a Task
 
-```bash
-curl -X PATCH http://localhost:8000/tasks/1/ \
-  -H "Content-Type: application/json" \
-  -d '{"title": "Updated Task Title"}'
+**PATCH** http:/url/tasks/id/
+
+```
+json body
+{
+  "title": "Updated Task Title"
+  "description": "Updated Task Description"
+  "status": "Updated Task Status"
+  "due_date": "Updated Task Due Date"
+  "priority": "Updated Task Priority"
+}
 ```
 
 ### Deleting a Task
 
-```bash
-curl -X DELETE http://localhost:8000/tasks/1/
-```
+**DELETE** http:/url/tasks/id/
 
 ## Implementation Details
 
@@ -172,7 +170,7 @@ Custom filter backends implement:
 ## Running Tests
 
 ```bash
-python manage.py test
+python manage.py test tasks.tests.folder_name.file_name
 ```
 
 ### Test Coverage
@@ -183,9 +181,9 @@ python manage.py test
 
 ## Additional Features
 
-- Fuzzy Search via pg_trgm extension
-- Rate limiting implemented for API endpoints
 - Pagination for list views
+- Fuzzy Search via pg_trgm extension
+- Rate limiting implemented for delete and patch API endpoints
 - Proper Error Handling, Logging and status codes
 - Solid Principles of Clean Architecture
 

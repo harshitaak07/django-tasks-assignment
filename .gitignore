@@ -43,6 +43,9 @@ dist/
 
 # Data files (you mentioned a 'data' folder)
 data/
+test_cache/
+debug.log/
+manage.log/
 
 # Node modules (if using Node.js)
 node_modules/

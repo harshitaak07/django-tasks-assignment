@@ -14,6 +14,7 @@ from pathlib import Path
 import dj_database_url
 from environs import Env
 import os
+import sys
 
 # Initialize the Env object to read environment variables
 env = Env()
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
+    'django_ratelimit',
     "rest_framework",
     "corsheaders",
     "coreapi",
@@ -60,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django_ratelimit.middleware.RatelimitMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -101,9 +104,9 @@ DATABASES = {
 
 POSTGRESQL_EXTENSIONS = ['pg_trgm']
 
-DATABASES['default']['OPTIONS'] = {
-    'options': '-c search_path=public',
-}
+# DATABASES['default']['OPTIONS'] = {
+#     'options': '-c search_path=public',
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -186,3 +189,21 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_LIMIT': 10,
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    },
+}
+
+# Override cache setting for testing (use Redis)
+if 'test' in sys.argv or DEBUG:
+    RATLIMING_ENABLED = False  # Ensure it's a boolean value, not a tuple
+    CACHES['default'] = {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': env.str("REDIS_URL"),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    }
